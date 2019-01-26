@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>R+RStudio Tips and Tricks</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Muhammad Aswan Syahputra" />
+    <meta name="date" content="2019-01-21" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R+RStudio Tips and Tricks
+## Hidden gems for improving workflow efficency
+### Muhammad Aswan Syahputra
+### 2019-01-21
+
+---
+
+
+
+
+
+
+class: inverse, center, middle
+
+# dplyr::glimpse(aswan)
+
+---
+
+background-image: url("assets/aswan.jpg")
+background-size: 350px
+background-position: 80% 50%
+
+## Muhammad Aswan Syahputra
+
+.pull-left[
+
+* Founder of [Sensolution.ID](https://sensolution.id)
+* Expertise in sensory science and consumer studies
+* Education:
+  + Master in Sensory Science, Wageningen University and Research, The Netherlands
+  + Bachelor in Food Technology, Universitas Brawijaya, Indonesia
+* [Telegram: @aswansyahputra](https://t.me/aswansyahputra)
+* [aswansyahputra@sensolution.id](mailto:aswansyahputra@sensolution.id)
+]
+
+---
+background-image: url("assets/sensory_science.jpg")
+background-size: contain
+
+---
+class: inverse, center, middle
+
+# dplyr::summarise(me_with_r)
+
+---
+background-image: url("assets/prefmap.png")
+background-size: contain
+
+---
+background-image: url("assets/attribute.png")
+background-size: contain
+
+---
+background-image: url("assets/jop.png")
+background-size: contain
+
+---
+background-image: url("assets/target_diagram.png")
+background-size: contain
+
+---
+background-image: url("assets/sensehub.png")
+background-size: contain
+
+---
+class: inverse, center, middle
+
+# R tips and tricks
+
+---
+
+## Some tips
+
+* Learn R using R
+```
+install.packages("swirl")
+```
+* `Ctrl + Enter` on example code
+* `x &lt;- rnorm(100)` versus `(x &lt;- rnorm(100))`
+* For repetitive task
+```
+install.packages("usethis")
+```
+
+---
+## Some tips
+
+* Play with `.RProfile`
+
+```
+message("Hi your_name, welcome to R!")
+if(interactive()) {
+  suppressMessages(require(usethis))
+  try(fortunes::fortune(), silent = TRUE)
+}
+
+options(
+  prompt = "indo-R &gt; ",
+  continue = "  ",
+  useFancyQuotes = FALSE,
+  max.print = 100 
+)
+```
+
+* Coding style
+  + [Google's R style guide](https://google.github.io/styleguide/Rguide.xml), or
+  + [The tidyverse style guide](https://style.tidyverse.org/)
+
+---
+class: inverse, center, middle
+
+# RStudio hidden gems
+
+---
+
+## Outline
+
+* RStudio project, use version control!
+* Installing and updating package, hit `Tools` menu
+* Using source editor (R script, Rmarkdown)
+  + Use section for R script, `Ctrl + Shift + R`
+  + Please name your chunks!
+* Setup Global Options
+  + Do not save or load `.Rdata`
+  + Adjust pane layout, console to right
+  + Change theme and font, e.g. `Fira Code` font family
+* The friendly `Tab`
+  + File navigation
+  + Autocompletion
+* Handy shortcuts
+* Addins
+  + `syler`
+  + `datapasta`
+  + `reprex`
+  + `clipr`
+  + `ggThemeAssist`
+* Cheatsheets, hit `Help - Cheatsheets`
+
+---
+## Handy shortcuts
+* `Alt + -`, for assignment operator `&lt;-`
+* `Ctrl + Shift + M`, for pipe operator `%&gt;%`
+* `Ctrl + Enter`, run example on help page
+* `Ctrl + Shift + [number]`, change focus
+* `Ctrl + Up`, search for code history on console or editor pane
+* `Alt + Up/Down`, move code to above or below
+* `Alt + Shift + Up/Down`, copy code to above or below
+* `Ctrl + D`, delete current line
+* `Ctrl + I`, reindent code
+* `Ctrl + Shift + A`, reformat code
+* `Ctrl + Shift + F10`, restart R session
+* `Ctrl + Alt + B`, run code up to current line
+* `Ctrl + .`, find file
+* `Alt + Shift + K`, shortcuts quick reference 
+
+---
+class: inverse, center, middle
+
+# Thanks!
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "r",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

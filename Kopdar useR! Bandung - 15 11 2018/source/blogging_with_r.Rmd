@@ -1,0 +1,127 @@
+---
+title: "R in Food Sensory and Blogging with R"
+author: Muhammad Aswan Syahputra
+date: November 15, 2018
+output:
+  revealjs::revealjs_presentation:
+    transition: fade
+    theme: night
+    highlight: kate
+    center: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+---
+
+## `dplyr::glimpse(aswan)`
+
+* Founder of [Sensolution.ID](https://sensolution.id)
+* Expertise in sensory science and consumer studies
+* Education:
+  + Master in Sensory Science, Wageningen University and Research, The Netherlands
+  + Bachelor in Food Technology, Universitas Brawijaya, Indonesia
+* [Telegram: \@aswansyahputra](https://t.me/aswansyahputra)
+* [aswansyahputra@sensolution.id](mailto:aswansyahputra@sensolution.id)
+
+# `dplyr::summarise(me_with_r)`
+
+## Studying consumer perception and preference
+
+```{r, echo=FALSE}
+knitr::include_graphics("fig/prefmap.png")
+```
+
+## Linking flavour/preference with food properties
+
+```{r, echo=FALSE}
+knitr::include_graphics("fig/attribute.png")
+```
+
+## Optimisation of food processing and production
+
+```{r, echo=FALSE}
+knitr::include_graphics("fig/jop.png")
+```
+
+## Observation of oral processing during eating
+
+```{r, echo=FALSE}
+knitr::include_graphics("fig/target_diagram.png")
+```
+
+## Developing SenseHub for sensory analyses
+
+```{r, echo=FALSE}
+knitr::include_graphics("fig/sensehub.png")
+```
+
+[s.id/sensehub_basic](https://aswansyahputra.shinyapps.io/sensehub_basic)
+
+# Blogging about R using R
+
+## Why should we?
+
+* Don’t shoot yourself in the foot! Code and document your works
+* Don't let your code scattered and stayed only in your computer
+* Be efficent! Code, document, and publish in one workflow
+* Is your code and approach good enough? Get some feedbacks!
+* Help the others! Enrich R resources in Bahasa Indonesia
+
+## `my_blog <- r + hugo + git`
+
+* R
+  + packages: `rmarkdown`, `blogdown`
+  + IDE RStudio
+* Hugo
+  + Using R: `blogdown::install_hugo()`
+  + GNU/Linux: `sudo snap install hugo --classic`
+  + Other: consult [here](https://gohugo.io/getting-started/installing/)
+* Git
+  + GitHub account
+  + Alaternatively use GitKraken
+* Know how to write using markdown (consult Help - Markdown Quick Reference in RStudio)
+
+## Steps: Generation
+
+* File - New Project - New Directory - Website using blogdown
+* Choose theme at [themes.gohugo.io](https://themes.gohugo.io). Filled out 'Hugo theme' (e.g. 'nathancday/min_night')
+* Copy archetypes in themes/the-theme into project working directory (recommended!)
+* `blogdown::build_site()` / `blogdown::serve_site()` (Addins - Serve Site)
+
+## Steps: Deployment
+
+* In R : `file.create("public/.nojekyll")` and `blogdown::hugo_build`
+* Create GitHub repository *'username.github.io'*
+* In Terminal:
+  + `cd public`
+  + `git init`
+  + `git remote add origin https://github.com/user/repo.git`
+  + `git add .`
+  + `git commit -m 'init'`
+  + `git push origin master`
+ 
+## What next? Config and write!
+
+* Configure the 'config.toml'
+* Add new post: Addins - New Post
+* Inspect it locally: `blogdown::serve_site()`
+* If OK, in R `blogdown::hugo_build` then publish it:
+  + `cd public`
+  + `git add .`
+  + `git commit -m 'added new content'`
+  + `git push origin master`
+  
+## Recommendations
+
+* Hosting on [Netlify](https://netlify.com) for automatic deployment
+* Use your custom domain
+
+## Getting helps
+
+* [Blogdown documentation](https://bookdown.org/yihui/blogdown/)
+* [Hugo Indonesia on Telegram](https://t.me/gohugoid)
+
+# Thanks!
+
+
+

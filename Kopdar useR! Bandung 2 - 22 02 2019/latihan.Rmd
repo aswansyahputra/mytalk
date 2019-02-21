@@ -1,0 +1,126 @@
+---
+title: "Latihan"
+author: "Muhammad Aswan Syahputra"
+date: "February 22, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pengantar
+
+Dokumen ini merupakan Rmarkdown yaitu format yang lebih mutakhir dibandingkan dengan Rscript. Dokumen Rmarkdown ini dapat dikonversi menjadi berbagai jenis format dokumen (contoh: html, pdf, doc, ppt, markdown, latex) serta dapat ditayangkan menjadi sebuah laman web dan bahkan aplikasi web.
+
+Dalam dokumen Rmarkdown, kode R ditulis didalam sebuah bagian yang disebut sebagai *chunk*. Sedangkan paragraf tulisan dituliskan diluar *chuck*. *Chunk* di tandai dan dibuka oleh simbol '\`\`\`{r}' dan di akhiri oleh simbol '\`\`\`'. Kode R didalam sebuah *chunk* dapat dijalankan dengan klik 'Run - Run Current Chuck' atau dengan menekan pemintas Ctrl+Shift+Enter. 
+
+Coba jalankan *chunk* berikut! Berapakah nilai rerata dari vektor `x`?
+
+```{r}
+x <- rnorm(100)
+mean(x)
+```
+
+Bandingkan nilai rerata vektor `x` yang Anda dapatkan dengan teman disamping Anda! Apakah hasilnya sama? Dapatkah Anda menjelaskan kenapa hal tersebut dapat terjadi?
+
+Sekarang buatlah kode R yang serupa dengan sebelumnya kedalam *chunk* (Anda dapat membuat *chunk* melalui pemintas Ctrl+Alt+I). Namun  tuliskan `set.seed(2202)` pada satu baris sebelum baris `x <- rnorm(100)`. Jalankan kode R tersebut dan bandingkan hasil yang Anda dapatkan dengan teman disamping Anda!
+
+## Pemasangan Paket
+
+Secara baku R memiliki fitur yang komprehensif untuk melakukan kalkulasi dasar, pengolahan data, dan analisis statistik. Namun fitur dan  fungsionalitas dari R dapat ditingkatkan dengan menambahkan dan memasang paket tambahan. Secara umum sumber paket tambahan untuk R dapat didapatkan dari CRAN, GitHub, Bioconductor, atau distribusi secara luring (berkas kompresi).
+
+Anda diminta untuk memasang paket "remotes" dan "stopwords" menggunakan fungsi `install.packages()`.
+
+```{r}
+install.packages("remotes")
+install.packages("___")
+```
+
+Setelah paket berhasil terpasang, Anda harus mengaktifkan paket tersebut setiap memulai sesi untuk dapat menggunakan fungsi-fungsi yang terdapat pada paket tersebut. Aktifkanlah paket "stopwords" yang telah terpasang dengan menggunakan fungsi `library()`!
+
+```{r}
+___("stopwords")
+```
+
+Selain dapat memasang paket dari direktori CRAN seperti pada kode sebelumnya, Anda juga dapat memasang dari direktori lainnya seperti GitHub dan Bioconductor. Prosedur memasang paket berbeda dengan contoh sebelumnya. Anda diminta untuk memasang paket "nusandata" yang terdapat pada [repositori GitHub](https://github.com/aswansyahputra/nusandata) dengan mengikuti petunjuk pada repositori tersebut. Buatlah kode untuk memasang dan mengaktifkan paket "nusandata" pada *chunk* berikut:
+
+```{r}
+___ # memasang paket
+___ # mengaktifkan paket
+```
+
+Pada kode pemasangan paket tersebut digunakan simbol `::`. Dapatkah Anda menjelaskan arti dari penggunaan simbol tersebut? Dapatkah Anda menjelaskan perbedaan simbol `::` dengan `:::`?
+
+## Pengolahan Data
+
+Paket "nusandata" berisikan beberapa dataset tentang Indonesia, termasuk data transkrip Debat Capres 1 dan Debat Capres 2 yang diambil dari [BahasaKita](http://debatcapres.bahasakita.co.id). Saat ini Anda diminta untuk melakukan eksplorasi dan pengolahan data transkrip Debat Capres 1 yang tersaji dengan nama dataset `tks_debatcapres1_2019`.
+
+Sebelum memulai eksplorasi dan pengolahan data, Anda dipersilakan untuk mengaktifkan paket "tidyverse" untuk melengkapi paket "stopwords" dan "nusandata" yang telah diaktifkan sebelumnya. Dapatkah Anda menyebutkan paket apa saja yang aktif saat Anda mengaktifkan paket "tidyverse"?
+
+```{r}
+library(___)
+```
+
+Anda dapat melihat gambaran umum data dengan menggunakan fungsi `str()` atau `glimpse` (dari paket "dplyr"). Ada berapa baris dan kolom yang terdapat pada dataset `tks_debatcapres1_2019`? Apa makna dari setiap kolom? Pada tanggal berapa debat tersebut berlangsung? (Petunjuk: Anda dapat menjalankan `?namadataset` untuk melihat dokumentasi. Dapatkah Anda menyebutkan kesalahan pada dokumentasi dataset debat capres tersebut?)
+
+```{r}
+
+```
+
+Dalam latihan ini akan dilakukan pengolahan dan visualisasi kata-kata yang diucapkan dalam debat tersebut. Jalankan kode berikut untuk mengetahui penutur dalam transkrip debat tersebut:
+
+```{r}
+distinct(tks_debatcapres1_2019, penutur)
+```
+
+Ubahlah kode R diatas kedalam format *pipeline* menggunakan `%>%`! 
+
+```{r}
+
+```
+
+Dalam melakukan analisis teks, penting untuk mempertimbangkan dan menghilangkan kata-kata yang umum digunakan dalam suatu bahasa. Kata-kata umum tersebut disebut dengan istilah *stopwords*. *Stopwords* Bahasa Indonesia dapat diambil dari paket "stopwords" dengan menggunakan fungsi `stopwords()`. Simpanlah *stopwords* Bahasa Indonesia tersebut dengan nama "stopwords_id"! (Petunjuk: Gunakan "stopwords-iso" sebagai sumber *stopwords*)
+
+```{r}
+stopwords_id <- ___
+```
+
+
+
+
+Kode R untuk melakukan hal tersebut telah tersedia
+
+```{r}
+
+df <- 
+  tks_debatcapres1_2019 %>% 
+  mutate(
+    teks = str_to_lower(teks),
+    teks = str_remove_all(teks, pattern = "[:punct:]")
+  ) %>% 
+  separate_rows(teks) %>% 
+  filter(
+    teks != "",
+    !teks %in% stopwords_id
+  ) %>% 
+  count(penutur, teks, sort = TRUE) %>% 
+  group_by(penutur) %>% 
+  top_n(25, wt = n) %>% 
+  ungroup()
+
+df %>% 
+  filter(penutur == "Joko Widodo") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col() +
+  coord_flip()
+
+df %>% 
+  filter(penutur == "Prabowo Subianto") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col() +
+  coord_flip()
+```
+

@@ -88,10 +88,67 @@ Dalam melakukan analisis teks, penting untuk mempertimbangkan dan menghilangkan 
 stopwords_id <- ___
 ```
 
+Kode R preparasi dataset untuk menghitung frekuensi kata tersedia sebagai pada *chunk* berikut.
 
+** Preparasi dataset **
+
+
+```{r}
+df1 <- mutate(
+  tks_debatcapres1_2019,
+  teks = str_to_lower(teks),
+    teks = str_remove_all(teks, pattern = "[:punct:]")
+)
+
+df2 <- separate_rows(df1, teks)
+
+df3 <- filter(
+  df2,
+  teks != "",
+  !teks %in% stopwords_id
+)
+
+df4 <- count(
+  df3,
+  penutur, 
+  teks, 
+  sort = TRUE
+)
+
+df5 <- group_by(df4, penutur)
+
+df6 <- top_n(df5, 25, wt = n)
+
+df7 <- ungroup(df6)
+
+df <- filter(df7, n >= 3)
+```
+
+
+Sedangkan kode R untuk membuat grafik batang frekuensi kata tersedia pada *chunk* berikut:
+
+```{r}
+df %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col() +
+  coord_flip()
+```
+
+
+ Anda diberi tugas untuk:
+
+* Membuat kode preparasi dataset yang tersedia kedalam bentuk *pipeline* dengan menggunakan `%>%`. Ingat data `tks_debatcapres1_2019` harus ditulis pada baris pertama dan hasil akhir disimpan dalam obyek bernama `df`! 
+
+* Membuat ringkasan alur yang ditempuh dengan memahami fungsi yang dijalankan pada setiap langkah hingga dataset siap untuk dibuat menjadi grafik. Contoh: 1. Membuat teks kedalam huruf kecil dan menghilangkan..., dan seterusnya. Sertakan perubahan yang terjadi pada dataset pada setiap langkah. Anda dapat membaca tujuan dan dokumentasi suatu fungsi dengan menjalankan `?namafungsi` pada konsol.
+
+* Memperbaiki grafik frekuensi kata dengan ketentuan:
+ - Satu grafik untuk setiap calon presiden
+ - Satu grafik untuk setiap pasangan calon presiden-wakil presiden
 
 
 Kode R untuk melakukan hal tersebut telah tersedia
+
+df
 
 ```{r}
 

@@ -8,7 +8,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ## Pengantar
@@ -54,7 +54,7 @@ ___ # mengaktifkan paket
 
 Pada kode pemasangan paket tersebut digunakan simbol `::`. Dapatkah Anda menjelaskan arti dari penggunaan simbol tersebut? Dapatkah Anda menjelaskan perbedaan simbol `::` dengan `:::`?
 
-## Pengolahan Data
+## Pengolahan dan Visualisasi Data
 
 Paket "nusandata" berisikan beberapa dataset tentang Indonesia, termasuk data transkrip Debat Capres 1 dan Debat Capres 2 yang diambil dari [BahasaKita](http://debatcapres.bahasakita.co.id). Saat ini Anda diminta untuk melakukan eksplorasi dan pengolahan data transkrip Debat Capres 1 yang tersaji dengan nama dataset `tks_debatcapres1_2019`.
 
@@ -88,10 +88,9 @@ Dalam melakukan analisis teks, penting untuk mempertimbangkan dan menghilangkan 
 stopwords_id <- ___
 ```
 
+### Preparasi dataset
+
 Kode R preparasi dataset untuk menghitung frekuensi kata tersedia sebagai pada *chunk* berikut.
-
-** Preparasi dataset **
-
 
 ```{r}
 df1 <- mutate(
@@ -125,7 +124,10 @@ df <- filter(df7, n >= 3)
 ```
 
 
-Sedangkan kode R untuk membuat grafik batang frekuensi kata tersedia pada *chunk* berikut:
+
+### Visualisasi Data
+
+Sedangkan kode dasar untuk membuat grafik batang frekuensi kata tersedia pada *chunk* berikut:
 
 ```{r}
 df %>% 
@@ -142,42 +144,14 @@ df %>%
 * Membuat ringkasan alur yang ditempuh dengan memahami fungsi yang dijalankan pada setiap langkah hingga dataset siap untuk dibuat menjadi grafik. Contoh: 1. Membuat teks kedalam huruf kecil dan menghilangkan..., dan seterusnya. Sertakan perubahan yang terjadi pada dataset pada setiap langkah. Anda dapat membaca tujuan dan dokumentasi suatu fungsi dengan menjalankan `?namafungsi` pada konsol.
 
 * Memperbaiki grafik frekuensi kata dengan ketentuan:
- - Satu grafik untuk setiap calon presiden
- - Satu grafik untuk setiap pasangan calon presiden-wakil presiden
-
-
-Kode R untuk melakukan hal tersebut telah tersedia
-
-df
-
-```{r}
-
-df <- 
-  tks_debatcapres1_2019 %>% 
-  mutate(
-    teks = str_to_lower(teks),
-    teks = str_remove_all(teks, pattern = "[:punct:]")
-  ) %>% 
-  separate_rows(teks) %>% 
-  filter(
-    teks != "",
-    !teks %in% stopwords_id
-  ) %>% 
-  count(penutur, teks, sort = TRUE) %>% 
-  group_by(penutur) %>% 
-  top_n(25, wt = n) %>% 
-  ungroup()
-
-df %>% 
-  filter(penutur == "Joko Widodo") %>% 
-  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
-  geom_col() +
-  coord_flip()
-
-df %>% 
-  filter(penutur == "Prabowo Subianto") %>% 
-  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
-  geom_col() +
-  coord_flip()
-```
-
+  + Satu grafik untuk setiap calon presiden
+  + Satu grafik untuk setiap calon wakil presiden
+  + Memberikan judul, *subtitle*, *caption* (menyebutkan sumber data), dan label yang sesuai pada sumbu x dan y. Petunjuk: baca dokumentasi fungsi `labs()`
+  + Kostumisasi tema plot. Anda dapat menggunakan tema yg telah ada `theme_X()`, namun sangat disarankan untuk mengatur tema sendiri. Misalnya mengganti warna latarbelakang, jenis fonta, ukuran label, warna grafik, dan sebagainya.
+  + [*For experienced user:*] Buatlah prosedur pembuatan grafik kedalam sebuah fungsi dengan dua argumen: "data" dan "penutur"!
+  + [*For experienced user:*] Modifikasi dataset `tks_debatcapres1_2019` sehingga penutur dikategorikan menjadi 3, yaitu "Paslon 01", "Paslon 02", "Moderator". Hilangkan penutur "Arief Budiman" dan "Pembicara" sebelum membuat kategori! Anda dapat menggunakan pendekatan *nested ifelse*, `%in%`, atau `case_between`.
+  + [*For experienced user:*] Buat grafik untuk setiap pasangan calon satu-per-satu. Kemudian buat grafik berisi data kedua paslon dengan menggunakan *facet*.
+* Anda dapat mencetak hasil pekerjaan Anda dengan cara klik tombol "Knit" (Ctrl+Shift+K), namun sebelumnya ubah nilai argumen `eval` pada *chuck* awal dokumen ini menjadi menjadi `TRUE`. `knitr::opts_chunk$set(eval = TRUE)`
+* **Jika telah selesai, Anda dipersilakan untuk mengeksplorasi dataset Debat Capres 2**
+ 
+Selamat! Anda telah berhasil melakukan pengolahan dan visualisasi dataset transkrip Debat Capres 1! Langakah-langkah diatas bukan merupakan prosedur ideal untuk melakukan analisis teks, namun cukup untuk memberikan Anda gambaran bagaimana melakukan preparasi dan pengolahan data hingga visualisasi dasar. **Dapatkah Anda menyebutkan alasan mengapa prosedur di atas tidak ideal untuk analisis teks?**

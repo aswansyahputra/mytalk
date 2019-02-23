@@ -1,0 +1,436 @@
+---
+title: "Jawaban Latihan"
+author: "Muhammad Aswan Syahputra"
+date: "February 22, 2019"
+output:
+  html_document:
+    highlight: pygments
+    number_section: no
+    theme: flatly
+    toc: yes
+    toc_collapse: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+## Pengantar
+
+Dokumen ini merupakan Rmarkdown yaitu format yang lebih mutakhir dibandingkan dengan Rscript. Dokumen Rmarkdown ini dapat dikonversi menjadi berbagai jenis format dokumen (contoh: html, pdf, doc, ppt, markdown, latex) serta dapat ditayangkan menjadi sebuah laman web dan bahkan aplikasi web.
+
+Dalam dokumen Rmarkdown, kode R ditulis didalam sebuah bagian yang disebut sebagai *chunk*. Sedangkan paragraf tulisan dituliskan diluar *chuck*. *Chunk* di tandai dan dibuka oleh simbol '\`\`\`{r}' dan di akhiri oleh simbol '\`\`\`'. Kode R didalam sebuah *chunk* dapat dijalankan dengan klik 'Run - Run Current Chuck' atau dengan menekan pemintas Ctrl+Shift+Enter. 
+
+Coba jalankan *chunk* berikut! Berapakah nilai rerata dari vektor `x`?
+
+```{r}
+x <- rnorm(100)
+mean(x)
+```
+
+Bandingkan nilai rerata vektor `x` yang Anda dapatkan dengan teman disamping Anda! Apakah hasilnya sama? Dapatkah Anda menjelaskan kenapa hal tersebut dapat terjadi?
+
+Sekarang buatlah kode R yang serupa dengan sebelumnya kedalam *chunk* (Anda dapat membuat *chunk* melalui pemintas Ctrl+Alt+I). Namun  tuliskan `set.seed(2202)` pada satu baris sebelum baris `x <- rnorm(100)`. Jalankan kode R tersebut dan bandingkan hasil yang Anda dapatkan dengan teman disamping Anda!
+
+## Pemasangan Paket
+
+Secara baku R memiliki fitur yang komprehensif untuk melakukan kalkulasi dasar, pengolahan data, dan analisis statistik. Namun fitur dan  fungsionalitas dari R dapat ditingkatkan dengan menambahkan dan memasang paket tambahan. Secara umum sumber paket tambahan untuk R dapat didapatkan dari CRAN, GitHub, Bioconductor, atau distribusi secara luring (berkas kompresi).
+
+Anda diminta untuk memasang paket "remotes" dan "stopwords" menggunakan fungsi `install.packages()`.
+
+```{r}
+install.packages("remotes")
+install.packages("stopwords")
+```
+
+Setelah paket berhasil terpasang, Anda harus mengaktifkan paket tersebut setiap memulai sesi untuk dapat menggunakan fungsi-fungsi yang terdapat pada paket tersebut. Aktifkanlah paket "stopwords" yang telah terpasang dengan menggunakan fungsi `library()`!
+
+```{r}
+library("stopwords")
+```
+
+Selain dapat memasang paket dari direktori CRAN seperti pada kode sebelumnya, Anda juga dapat memasang dari direktori lainnya seperti GitHub dan Bioconductor. Prosedur memasang paket berbeda dengan contoh sebelumnya. Anda diminta untuk memasang paket "nusandata" yang terdapat pada [repositori GitHub](https://github.com/aswansyahputra/nusandata) dengan mengikuti petunjuk pada repositori tersebut. Buatlah kode untuk memasang dan mengaktifkan paket "nusandata" pada *chunk* berikut:
+
+```{r}
+remotes::install_github("aswansyahputra/nusandata") # memasang paket
+library(nusandata) # mengaktifkan paket
+```
+
+Pada kode pemasangan paket tersebut digunakan simbol `::`. Dapatkah Anda menjelaskan arti dari penggunaan simbol tersebut? Dapatkah Anda menjelaskan perbedaan simbol `::` dengan `:::`?
+
+**Jawaban:** simbol `::` digunakan untuk menggunakan fungsi dari suatu paket tanpa harus mengaktifkan paket tersebut melalui `library(nama_paket)` terlebih dahulu. Struktur penulisannya adalah `nama_paket::nama_fungsi`. Simbol `::` digunakan untuk menggunakan *exported function*, yaitu fungsi yang secara baku ditayangkan kepada pengguna saat paket diaktifkan. Sedangkan simbol `:::` digunakan untuk menggunakan *non-exported function*, yaitu fungsi yang secara baku tidak ditayangkan pengguna saat paket diaktifkan (fungsi internal dalam paket).
+
+## Pengolahan dan Visualisasi Data
+
+Paket "nusandata" berisikan beberapa dataset tentang Indonesia, termasuk data transkrip Debat Capres 1 dan Debat Capres 2 yang diambil dari [BahasaKita](http://debatcapres.bahasakita.co.id). Saat ini Anda diminta untuk melakukan eksplorasi dan pengolahan data transkrip Debat Capres 1 yang tersaji dengan nama dataset `tks_debatcapres1_2019`.
+
+Sebelum memulai eksplorasi dan pengolahan data, Anda dipersilakan untuk mengaktifkan paket "tidyverse" untuk melengkapi paket "stopwords" dan "nusandata" yang telah diaktifkan sebelumnya. Dapatkah Anda menyebutkan paket apa saja yang aktif saat Anda mengaktifkan paket "tidyverse"?
+
+```{r}
+library(tidyverse)
+```
+
+Anda dapat melihat gambaran umum data dengan menggunakan fungsi `str()` atau `glimpse` (dari paket "dplyr"). Ada berapa baris dan kolom yang terdapat pada dataset `tks_debatcapres1_2019`? Apa makna dari setiap kolom? Pada tanggal berapa debat tersebut berlangsung? (Petunjuk: Anda dapat menjalankan `?namadataset` untuk melihat dokumentasi. Dapatkah Anda menyebutkan kesalahan pada dokumentasi dataset debat capres tersebut?)
+
+```{r}
+glimpse(tks_debatcapres1_2019)
+```
+
+Dalam latihan ini akan dilakukan pengolahan dan visualisasi kata-kata yang diucapkan dalam debat tersebut. Jalankan kode berikut untuk mengetahui penutur dalam transkrip debat tersebut:
+
+```{r}
+distinct(tks_debatcapres1_2019, penutur)
+```
+
+Ubahlah kode R diatas kedalam format *pipeline* menggunakan `%>%`! 
+
+```{r}
+tks_debatcapres1_2019 %>% 
+  distinct(penutur)
+```
+
+Dalam melakukan analisis teks, penting untuk mempertimbangkan dan menghilangkan kata-kata yang umum digunakan dalam suatu bahasa. Kata-kata umum tersebut disebut dengan istilah *stopwords*. *Stopwords* Bahasa Indonesia dapat diambil dari paket "stopwords" dengan menggunakan fungsi `stopwords()`. Simpanlah *stopwords* Bahasa Indonesia tersebut dengan nama "stopwords_id"! (Petunjuk: Gunakan "stopwords-iso" sebagai sumber *stopwords*)
+
+```{r}
+stopwords_id <- stopwords(language = "id", source = "stopwords-iso")
+head(stopwords_id, 20) # melihat 20 kata pertama
+```
+
+### Preparasi dataset
+
+Kode R preparasi dataset untuk menghitung frekuensi kata tersedia sebagai pada *chunk* berikut.
+
+```{r}
+df1 <- mutate(
+  tks_debatcapres1_2019,
+  teks = str_to_lower(teks),
+  teks = str_remove_all(teks, pattern = "[:punct:]")
+)
+
+df2 <- separate_rows(df1, teks, sep = " ")
+
+df3 <- filter(
+  df2,
+  teks != "",
+  !teks %in% stopwords_id
+)
+
+df4 <- count(
+  df3,
+  penutur, 
+  teks, 
+  sort = TRUE
+)
+
+df5 <- group_by(df4, penutur)
+
+df6 <- top_n(df5, 25, wt = n)
+
+df7 <- ungroup(df6)
+
+df <- filter(df7, n >= 3)
+
+df
+```
+
+### Visualisasi Data
+
+Sedangkan kode dasar untuk membuat grafik batang frekuensi kata tersedia pada *chunk* berikut:
+
+```{r}
+df %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col() +
+  coord_flip()
+```
+
+## Tugas
+
+### Kode Preparasi Dataset Format Pipeline
+
+**Tugas:** Membuat kode preparasi dataset yang tersedia kedalam bentuk *pipeline* dengan menggunakan `%>%`. Ingat data `tks_debatcapres1_2019` harus ditulis pada baris pertama dan hasil akhir disimpan dalam obyek bernama `df`! 
+
+** Jawaban:**
+
+```{r}
+df <- 
+  tks_debatcapres1_2019 %>% 
+  mutate(
+    teks = str_to_lower(teks),
+    teks = str_remove_all(teks, pattern = "[:punct:]")
+  ) %>% 
+  separate_rows(teks, sep = " ") %>% 
+  filter(
+    teks != "",
+    !teks %in% stopwords_id
+  ) %>% 
+  count(penutur, teks, sort = TRUE
+  ) %>% 
+  group_by(penutur) %>% 
+  top_n(25, wt = n) %>% 
+  ungroup() %>% 
+  filter(n >= 3)
+
+df
+```
+
+
+### Alur Preparasi Dataset
+
+**Tugas:** Membuat ringkasan alur yang ditempuh dengan memahami fungsi yang dijalankan pada setiap langkah hingga dataset siap untuk dibuat menjadi grafik. Contoh: 1. Membuat teks kedalam huruf kecil dan menghilangkan..., dan seterusnya. Sertakan perubahan yang terjadi pada dataset pada setiap langkah. Anda dapat membaca tujuan dan dokumentasi suatu fungsi dengan menjalankan `?namafungsi` pada konsol.
+
+**Jawaban:** 1) Membuat karakter dalam kolom teks kedalam format furuf kecil dan menghilangkan tanda baca; 2) Memisahkan karakter dalam kolom teks sehingga menjadi kata-per-kata dengan menggunakan spasi sebagai penanda antar kata. Setiap kata disimpan dalam satu baris; 3) Membuang baris kata apabila nilainya adalah spasi dan termasuk dalam *stopwords*; 4) Menghitung frekuensi penggunaan kata berdasarkan penutur dan mengurutkan hasilnya berdasarkan nilai tertinggi; 5) Membuat pengelompokan data berdasarkan penutur; 6) Mengambil 25 kata dengan frekuensi penggunaan tertinggi dari setiap penutur. Catatan: Hasil yang didapatkan dapat lebih dari 25 kata apabila terdapat frekuensi yang sama; 7) Menghapus pengelompokan data berdasarkan penutur; 8) Membuang baris apabila frekuensi penggunaan kata kurang dari 3 kali.
+
+### Grafik Frekuensi Kata
+
+**Tugas:** Memperbaiki grafik frekuensi kata dengan ketentuan:
+
++ Satu grafik untuk setiap calon presiden
++ Satu grafik untuk setiap calon wakil presiden
++ Memberikan judul, *subtitle*, *caption* (menyebutkan sumber data), dan label yang sesuai pada sumbu x dan y. Petunjuk: baca dokumentasi fungsi `labs()`
++ Kostumisasi tema plot. Anda dapat menggunakan tema yg telah ada `theme_X()`, namun sangat disarankan untuk mengatur tema sendiri. Misalnya mengganti warna latarbelakang, jenis fonta, ukuran label, warna grafik, dan sebagainya.
++ [*For experienced user:*] Buatlah prosedur pembuatan grafik kedalam sebuah fungsi dengan dua argumen: "data" dan "penutur"!
++ [*For experienced user:*] Modifikasi dataset `tks_debatcapres1_2019` sehingga penutur dikategorikan menjadi 3, yaitu "Paslon 01", "Paslon 02", "Moderator". Hilangkan penutur "Arief Budiman" dan "Pembicara" sebelum membuat kategori! Anda dapat menggunakan pendekatan *nested ifelse*, `%in%`, `case_between`, atau lainnya.
++ [*For experienced user:*] Buat grafik untuk setiap pasangan calon satu-per-satu. Kemudian buat grafik berisi data kedua paslon dengan menggunakan *facet*.
+
+**Jawaban:**
+
+```{r}
+df %>% 
+  filter(penutur == "Joko Widodo") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col(fill = "grey90", col = "grey60") +
+  coord_flip() +
+  labs(
+    title = "Frekuensi Penggunaan Kata oleh Joko Widodo",
+    subtitle = "Debat Capres 1 pada 17 Januari 2019",
+    caption = "Sumber: debatcapres.bahasakita.co.id",
+    x = "",
+    y = "Frekuensi Kata"
+  ) +
+  theme(
+    title = element_text(
+      family = "Manjari",
+      face = "bold",
+      size = 14,
+      colour = "grey90"
+    ),
+    axis.text = element_text(
+      family = "Manjari",
+      size = 11,
+      colour = "grey70"
+    ),
+    axis.ticks = element_line(colour = "white"),
+    panel.grid.major = element_blank(), 
+    plot.background = element_rect(
+      fill = "#004e6f"
+    ), 
+    panel.background = element_rect(
+      fill = "#004e6f"
+    )
+  )
+
+# Tambahan: membuat tema sebagai fungsi untuk digunakan pada grafik berikutnya
+
+my_theme <- function() {
+   theme(
+    title = element_text(
+      family = "Manjari",
+      face = "bold",
+      size = 14,
+      colour = "grey90"
+    ),
+    axis.text = element_text(
+      family = "Manjari",
+      size = 11,
+      colour = "grey70"
+    ),
+    axis.ticks = element_line(colour = "white"),
+    panel.grid.major = element_blank(), 
+    plot.background = element_rect(
+      fill = "#004e6f"
+    ), 
+    panel.background = element_rect(
+      fill = "#004e6f"
+    )
+  )
+}
+```
+
+  
+```{r}
+df %>% 
+  filter(penutur == "Prabowo Subianto") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col(fill = "grey90", col = "grey60") +
+  coord_flip() +
+  labs(
+    title = "Frekuensi Penggunaan Kata oleh Prabowo Subianto",
+    subtitle = "Debat Capres 1 pada 17 Januari 2019",
+    caption = "Sumber: debatcapres.bahasakita.co.id",
+    x = "",
+    y = "Frekuensi Kata"
+  ) +
+  my_theme()
+```
+  
+  
+```{r}
+df %>% 
+  filter(penutur == "Maruf Amin") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col(fill = "grey90", col = "grey60") +
+  coord_flip() +
+  labs(
+    title = "Frekuensi Penggunaan Kata oleh Maruf Amin",
+    subtitle = "Debat Capres 1 pada 17 Januari 2019",
+    caption = "Sumber: debatcapres.bahasakita.co.id",
+    x = "",
+    y = "Frekuensi Kata"
+  ) +
+  my_theme()
+```
+  
+  
+```{r}
+df %>% 
+  filter(penutur == "Sandiaga Uno") %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col(fill = "grey90", col = "grey60") +
+  coord_flip() +
+  labs(
+    title = "Frekuensi Penggunaan Kata oleh Sandiaga Uno",
+    subtitle = "Debat Capres 1 pada 17 Januari 2019",
+    caption = "Sumber: debatcapres.bahasakita.co.id",
+    x = "",
+    y = "Frekuensi Kata"
+  ) +
+  my_theme()
+```
+
+```{r}
+
+plot_kata <- function(data, penutur) {
+  
+  if (missing(data) | missing(penutur)) {
+    stop("Argumen yang Anda masukan belum lengkap.", call. = FALSE)
+  }
+  
+  if (!penutur %in% data[["penutur"]]) {
+    stop("Penutur yang Anda inginkan tidak ada di dalam daftar penutur.", call. = FALSE)
+  }
+  
+  penutur_quo <- enquo(penutur)
+
+    data %>% 
+    filter(penutur == !!penutur_quo) %>% 
+    ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+    geom_col(fill = "grey90", col = "grey60") +
+    coord_flip() +
+    labs(
+      title = paste("Frekuensi Penggunaan Kata oleh", penutur),
+      subtitle = "Debat Capres 1 pada 17 Januari 2019",
+      caption = "Sumber: debatcapres.bahasakita.co.id",
+      x = "",
+      y = "Frekuensi Kata"
+    ) +
+    my_theme()
+}
+```
+  
+```{r}
+plot_kata(data = df, penutur = "Ira Koesno")
+plot_kata(data = df, penutur = "Imam Priyono")
+```
+
+
+```{r}
+df_sederhana <- 
+  tks_debatcapres1_2019 %>% 
+  filter(!penutur %in% c("Arief Budiman", "Pembicara")) %>% 
+  mutate(
+    penutur = case_when(
+      penutur %in% c("Joko Widodo", "Maruf Amin") ~ "Paslon 01",
+      penutur %in% c("Prabowo Subianto", "Sandiaga Uno") ~ "Paslon 02",
+      TRUE ~ "Moderator"
+    )
+  ) %>% 
+  mutate(
+    teks = str_to_lower(teks),
+    teks = str_remove_all(teks, pattern = "[:punct:]")
+  ) %>% 
+  separate_rows(teks, sep = " ") %>% 
+  filter(
+    teks != "",
+    !teks %in% stopwords_id
+  ) %>% 
+  count(penutur, teks, sort = TRUE
+  ) %>% 
+  group_by(penutur) %>% 
+  top_n(25, wt = n) %>% 
+  ungroup() %>% 
+  filter(n >= 3)
+
+df_sederhana
+```
+
+```{r}
+plot_kata(data = df_sederhana, penutur = "Paslon 01")
+```
+
+```{r}
+plot_kata(data = df_sederhana, penutur = "Paslon 02")
+```
+
+```{r}
+df_sederhana %>% 
+  filter(penutur %in% c("Paslon 01", "Paslon 02")) %>% 
+  ggplot(aes(x = fct_reorder(teks, n), y = n)) +
+  geom_col(fill = "grey90", col = "grey60") +
+  coord_flip() +
+  facet_wrap(~penutur, scales = "free") +
+  labs(
+    title = "Frekuensi Penggunaan Kata oleh Kedua Paslon",
+    subtitle = "Debat Capres 1 pada 17 Januari 2019",
+    caption = "Sumber: debatcapres.bahasakita.co.id",
+    x = "",
+    y = "Frekuensi Kata"
+  ) +
+theme(
+    title = element_text(
+      family = "Manjari",
+      face = "bold",
+      size = 14,
+      colour = "grey90"
+    ),
+    axis.text = element_text(
+      family = "Manjari",
+      size = 11,
+      colour = "grey70"
+    ),
+    axis.ticks = element_line(colour = "white"),
+    panel.grid.major = element_blank(), 
+    plot.background = element_rect(
+      fill = "#004e6f"
+    ), 
+    panel.background = element_rect(
+      fill = "#004e6f"
+    ),
+    strip.background = element_blank(),
+    strip.text = element_text(
+      family = "Manjari",
+      size = 11,
+      colour = "grey70"
+    )
+  )
+```
+  
+* Anda dapat mencetak hasil pekerjaan Anda dengan cara klik tombol "Knit" (Ctrl+Shift+K), namun sebelumnya ubah nilai argumen `eval` pada *chuck* awal dokumen ini menjadi menjadi `TRUE`. `knitr::opts_chunk$set(eval = TRUE)`
+* **Jika telah selesai, Anda dipersilakan untuk mengeksplorasi dataset Debat Capres 2**
+ 
+Selamat! Anda telah berhasil melakukan pengolahan dan visualisasi dataset transkrip Debat Capres 1! Langakah-langkah diatas bukan merupakan prosedur ideal untuk melakukan analisis teks, namun cukup untuk memberikan Anda gambaran bagaimana melakukan preparasi dan pengolahan data hingga visualisasi dasar. **Dapatkah Anda menyebutkan alasan mengapa prosedur di atas tidak ideal untuk analisis teks?**

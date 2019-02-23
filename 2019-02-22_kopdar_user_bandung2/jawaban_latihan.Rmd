@@ -17,7 +17,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE)
+knitr::opts_chunk$set(eval = TRUE, warning = FALSE ,message = FALSE, error = FALSE)
 ```
 
 ## Pengantar
@@ -36,6 +36,12 @@ mean(x)
 Bandingkan nilai rerata vektor `x` yang Anda dapatkan dengan teman disamping Anda! Apakah hasilnya sama? Dapatkah Anda menjelaskan kenapa hal tersebut dapat terjadi?
 
 Sekarang buatlah kode R yang serupa dengan sebelumnya kedalam *chunk* (Anda dapat membuat *chunk* melalui pemintas Ctrl+Alt+I). Namun  tuliskan `set.seed(2202)` pada satu baris sebelum baris `x <- rnorm(100)`. Jalankan kode R tersebut dan bandingkan hasil yang Anda dapatkan dengan teman disamping Anda!
+
+```{r}
+set.seed(2202)
+x <- rnorm(100)
+mean(x)
+```
 
 ## Pemasangan Paket
 
@@ -71,7 +77,7 @@ Paket "nusandata" berisikan beberapa dataset tentang Indonesia, termasuk data tr
 
 Sebelum memulai eksplorasi dan pengolahan data, Anda dipersilakan untuk mengaktifkan paket "tidyverse" untuk melengkapi paket "stopwords" dan "nusandata" yang telah diaktifkan sebelumnya. Dapatkah Anda menyebutkan paket apa saja yang aktif saat Anda mengaktifkan paket "tidyverse"?
 
-```{r}
+```{r, message = TRUE}
 library(tidyverse)
 ```
 

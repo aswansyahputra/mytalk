@@ -5,6 +5,7 @@
 * 2019-01-26 Data Scientalk Himatika ITB, [online slides](https://speakerdeck.com/aswansyahputra/r-plus-for-data-science)
 * 2019-02-22 Kopdar useR! Bandung 2, [online slides](https://speakerdeck.com/aswansyahputra/introduction-to-r-plus)
 * 2019-03-23 Kopdar useR! Jakarta 2, [online slides](https://speakerdeck.com/aswansyahputra/lets-build-your-first-rstudio-and-addins)
+* 2019-05-11 Meetup Algoritma X Machine Learning ID X Komunitas R Indonesia, [online slides](https://speakerdeck.com/aswansyahputra/data-carpentry-with-tidyverse)
 
 ## License
 

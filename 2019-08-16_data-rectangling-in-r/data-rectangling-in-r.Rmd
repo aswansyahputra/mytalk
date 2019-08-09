@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{bash scrape-instagram}
+```{bash scrape-instagram, eval = FALSE}
 instagram-scraper tirtoid -m 20 --comments --media-types none
 ```
 
@@ -24,20 +24,18 @@ my_json <- fromJSON("tirtoid/tirtoid.json")
 jsonedit(my_json)
 ```
 
-```{r prepare-json}
-prepared_json <- 
+```{r transform-json}
+transformed_json <- 
   my_json %>% 
   pluck(1) %>% 
   jsonlite::flatten() %>%
-  transpose()
+  transpose() %>%
+  enframe(name = "id", value = "post")
+transformed_json
 ```
 
-```{r use-map}
-my_json %>%
-  pluck(1) %>%
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post") %>%
+```{r map}
+transformed_json %>%
   mutate(
     post_time = map(post, "taken_at_timestamp"),
     is_video = map(post, "is_video"),
@@ -53,12 +51,8 @@ my_json %>%
   )
 ```
 
-```{r use-map-variant}
-my_json %>%
-  pluck(1) %>%
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post") %>%
+```{r map-variant}
+transformed_json %>%
   mutate(
     post_time = map_int(post, "taken_at_timestamp"),
     is_video = map_lgl(post, "is_video"),
@@ -74,7 +68,15 @@ my_json %>%
   )
 ```
 
-```{r smart-map}
+```{r define-smart-map}
+#' Smart extraction of elements from list
+#'
+#' Extract and possibly flatten the output of elements extraction automatically.
+#' @param .x A list or atomic vectors
+#' @param what An elemet of list to be extracted
+#' @return A list or possibly an atomic vector
+#' @importFrom purrr map
+#' @export
 smart_map <- function(.x, what) {
   res <- map(.x, what, .default = NA)
   if (all(sapply(res, length) == 1)) {
@@ -84,12 +86,8 @@ smart_map <- function(.x, what) {
 }
 ```
 
-```{r use-smart-map}
-my_json %>%
-  pluck(1) %>%
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post") %>%
+```{r smart-map}
+transformed_json %>% 
   mutate(
     post_time = smart_map(post, "taken_at_timestamp"),
     is_video = smart_map(post, "is_video"),
@@ -105,12 +103,9 @@ my_json %>%
   )
 ```
 
-```{r}
-my_json %>%
-  pluck(1) %>%
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post") %>%
+```{r unnest-comments}
+tirtoid_comments <- 
+  transformed_json %>%
   mutate(
     post_time = smart_map(post, "taken_at_timestamp"),
     is_video = smart_map(post, "is_video"),
@@ -132,29 +127,7 @@ my_json %>%
 ```
 
 ```{r}
-my_json %>%
-  pluck(1) %>%
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post") %>%
-  mutate(
-    post_time = smart_map(post, "taken_at_timestamp"),
-    is_video = smart_map(post, "is_video"),
-    caption = smart_map(post, list(
-      "edge_media_to_caption.edges", "node", "text"
-    )),
-    tags = smart_map(post, "tags"),
-    video_view = smart_map(post, "video_view_count"),
-    media_like = smart_map(post, "edge_media_preview_like.count"),
-    comments_username = smart_map(post, list("comments.data", "owner", "username")),
-    comments_time = smart_map(post, list("comments.data", "created_at")),
-    comments_text = smart_map(post, list("comments.data", "text"))
-  ) %>% 
-  select(-post) %>% 
-  mutate(
-    tags = map_chr(tags, paste, collapse = ", ")
-  ) %>% 
-  unnest() %>% 
+tirtoid_comments %>% 
   mutate_at(vars(ends_with("time")), ~as.POSIXct(.x, origin  = "1970-01-01")) %>% 
   mutate_if(is.numeric, ~ .x %>% str_remove_all("\\n") %>% str_trim())
 ```

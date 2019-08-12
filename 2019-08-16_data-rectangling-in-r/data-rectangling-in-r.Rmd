@@ -1,133 +1,421 @@
 ---
-title: "Data Rectangling"
+title: "Data rectangling in R"
+subtitle: "a journey from `JSON` to `CSV`"  
 author: "Muhammad Aswan Syahputra"
-date: "8/5/2019"
-output: html_document
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: assets/aswansyahputra.css
+    seal: false
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  dpi = 300,
+  fig.align = "center",
+  out.width = "80%",
+  cache = FALSE
+)
 ```
 
-```{bash scrape-instagram, eval = FALSE}
-instagram-scraper tirtoid -m 20 --comments --media-types none
+```{r xaringan-themer, include=FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "#162c4f",
+  text_font_family = google_font("Lato"),
+  text_font_size = "30x",
+  header_font_family = google_font("Montserrat"),
+  header_font_weight = "bold",
+  header_h1_font_size = "70px",
+  link_color = "darkorange",
+  code_inline_color = "darkorange",
+  code_font_google = google_font("Fira Code"),
+  extra_css = list(
+    ".scrollable-slide" = list(
+      "height" =  "800px;",
+      "overflow-y" =  "auto !important;"
+    )
+  ),
+  outfile = "assets/aswansyahputra.css"
+)
 ```
 
-```{r load-packages}
+```{r preparation, include = FALSE}
+library(countdown)
 library(jsonlite)
-library(listviewer)
-library(tidyverse)
+
+billionaires_small <- fromJSON("data-raw/billionaires_small.json", simplifyVector = TRUE, simplifyDataFrame = FALSE)
 ```
 
-```{r inspect-json}
-my_json <- fromJSON("tirtoid/tirtoid.json")
-jsonedit(my_json)
+class: inverse, left, middle
+background-image: url("assets/r-indonesia.svg")
+background-size: 500px
+background-position: 12.5% 50%
+
+.pull-right[
+# Data rectangling:
+### *a journey from `JSON` to `CSV`*
+***
+#### Muhammad Aswan Syahputra
+]
+
+---
+class: middle
+background-image: url("assets/aswan.jpg")
+background-size: 450px
+background-position: 87.5% 50%
+
+.pull-left[
+## About me
++ Sensory scientist @ [Sensolution.ID](https://sensolution.id)
++ Intructor @ [R Academy Telkom University](https://dbe.telkomuniversity.ac.id/r-academy/)
++ Initiator of [Komunitas R Indonesia](https://t.me/GNURIndonesia) (est. 13 August 2016)
++ `r icon::ii("cube")` : `sensehubr`, `nusandata`,
+`bandungjuara`, `prakiraan`, etc
++ `r icon::ii("android-desktop")` : `sensehub`, `thermostats`,
+`aquastats`, `bcrp`, `bandungjuara`, etc
++ `r icon::ii("paper-airplane")` : aswansyahputra
++ `r icon::ii("social-twitter")` : aswansyahputra_
++ `r icon::ii("social-github")` : aswansyahputra
++ `r icon::ii("social-linkedin")` : aswansyahputra
+]
+
+---
+class: inverse, middle
+
+# Know your neighbours! `r emo::ji("handshake")`
+
++ *Who are you?*
++ *What you do with data?*
++ *How you describe your experience with R?*
+
+--
+
+```{r, echo = FALSE}
+countdown(minutes = 3, seconds = 0)
 ```
 
-```{r transform-json}
-transformed_json <- 
-  my_json %>% 
-  pluck(1) %>% 
-  jsonlite::flatten() %>%
-  transpose() %>%
-  enframe(name = "id", value = "post")
-transformed_json
-```
+---
 
-```{r map}
-transformed_json %>%
-  mutate(
-    post_time = map(post, "taken_at_timestamp"),
-    is_video = map(post, "is_video"),
-    caption = map(post, list(
-      "edge_media_to_caption.edges", "node", "text"
-    )),
-    tags = map(post, "tags"),
-    video_view = map(post, "video_view_count"),
-    media_like = map(post, "edge_media_preview_like.count"),
-    comments_username = map(post, list("comments.data", "owner", "username")),
-    comments_time = map(post, list("comments.data", "created_at")),
-    comments_text = map(post, list("comments.data", "text"))
-  )
-```
+### Let's play with some basics! `r emo::ji("hatching_chick")`
 
-```{r map-variant}
-transformed_json %>%
-  mutate(
-    post_time = map_int(post, "taken_at_timestamp"),
-    is_video = map_lgl(post, "is_video"),
-    caption = map_chr(post, list(
-      "edge_media_to_caption.edges", "node", "text"
-    )),
-    tags = map(post, "tags"),
-    video_view = map_int(post, "video_view_count"),
-    media_like = map_int(post, "edge_media_preview_like.count"),
-    comments_username = map(post, list("comments.data", "owner", "username")),
-    comments_time = map(post, list("comments.data", "created_at")),
-    comments_text = map(post, list("comments.data", "text"))
-  )
+.pull-left[
+```{r}
+(x1 <- "useR! Yogyakarta")
+(x2 <- TRUE)
+(x3 <- 1.43)
+(x4 <- 1L:5L)
 ```
+Can you guess the **type** of `x1`, `x2`, `x3`, and `x4`? How about their **length**?
+]
 
-```{r define-smart-map}
-#' Smart extraction of elements from list
-#'
-#' Extract and possibly flatten the output of elements extraction automatically.
-#' @param .x A list or atomic vectors
-#' @param what An elemet of list to be extracted
-#' @return A list or possibly an atomic vector
-#' @importFrom purrr map
-#' @export
-smart_map <- function(.x, what) {
-  res <- map(.x, what, .default = NA)
-  if (all(sapply(res, length) == 1)) {
-    res <- unlist(res)
-  }
-  return(res)
-}
-```
+--
 
-```{r smart-map}
-transformed_json %>% 
-  mutate(
-    post_time = smart_map(post, "taken_at_timestamp"),
-    is_video = smart_map(post, "is_video"),
-    caption = smart_map(post, list(
-      "edge_media_to_caption.edges", "node", "text"
-    )),
-    tags = smart_map(post, "tags"),
-    video_view = smart_map(post, "video_view_count"),
-    media_like = smart_map(post, "edge_media_preview_like.count"),
-    comments_username = smart_map(post, list("comments.data", "owner", "username")),
-    comments_time = smart_map(post, list("comments.data", "created_at")),
-    comments_text = smart_map(post, list("comments.data", "text"))
-  )
+.pull-right[
+```{r}
+typeof(x1)
+length(x1)
+typeof(x2)
+length(x2)
+typeof(x3)
+length(x3)
 ```
+What about `x4`? `r emo::ji("thinking")`
+]
 
-```{r unnest-comments}
-tirtoid_comments <- 
-  transformed_json %>%
-  mutate(
-    post_time = smart_map(post, "taken_at_timestamp"),
-    is_video = smart_map(post, "is_video"),
-    caption = smart_map(post, list(
-      "edge_media_to_caption.edges", "node", "text"
-    )),
-    tags = smart_map(post, "tags"),
-    video_view = smart_map(post, "video_view_count"),
-    media_like = smart_map(post, "edge_media_preview_like.count"),
-    comments_username = smart_map(post, list("comments.data", "owner", "username")),
-    comments_time = smart_map(post, list("comments.data", "created_at")),
-    comments_text = smart_map(post, list("comments.data", "text"))
-  ) %>% 
-  select(-post) %>% 
-  mutate(
-    tags = map_chr(tags, paste, collapse = ", ")
-  ) %>% 
-  unnest()
+---
+class: inverse, middle
+
+# How to combine `x1`, `x2`, `x3`, and `x4` without losing their properties?
+
+---
+
+### The use of `c()`
+
+.pull-left[
+```{r}
+(xs_c <- c(x1, x2, x3, x4))
 ```
+It seems off, doesn't it? `r emo::ji("sob")` Can you explain? `r emo::ji("confused")`
+]
+
+--
+
+.pull-right[
+Let's check it! `r emo::ji("search")`
+```{r}
+length(xs_c)
+typeof(xs_c)
+```
+`length` `r emo::ji("cross_mark")`, `type` `r emo::ji("question") `What's happening? `r emo::ji("ghost")`
+]
+
+---
+
+### The use of `list()`
+
+.pull-left[
+```{r}
+(xs_list <- list(x1, x2, x3, x4))
+```
+Hmm, not so familiar but it seems to be what we wanted, right? `r emo::ji("wink")`
+]
+
+--
+
+.pull-right[
+Let's also check it! `r emo::ji("search")`
+```{r}
+length(xs_list)
+typeof(xs_list)
+```
+`length` `r emo::ji("check")`, `type` `r emo::ji("question")` What is `list`? `r emo::ji("thought")`
+]
+
+---
+class: inverse, middle
+
+# Hold on! `r emo::ji("stop_sign")`
+
+--
+
+## How to check if the `type` and `length` of each element are preserved?
+
+---
+
+### The good old `for` loop `r emo::ji("excited")`
 
 ```{r}
-tirtoid_comments %>% 
-  mutate_at(vars(ends_with("time")), ~as.POSIXct(.x, origin  = "1970-01-01")) %>% 
-  mutate_if(is.numeric, ~ .x %>% str_remove_all("\\n") %>% str_trim())
+types_xs_c <- vector("character", length = length(xs_c))
+for (i in seq_along(xs_c)) {
+  types_xs_c[[i]] <- typeof(xs_c[[i]])
+}
+types_xs_c
 ```
+
+--
+
+```{r}
+lengths_xs_c <- vector("integer", length = length(xs_c))
+for (i in seq_along(xs_c)) {
+  lengths_xs_c[[i]] <- length(xs_c[[i]])
+}
+lengths_xs_c
+```
+
+--
+
+How would you perform the same procedure for `xs_list`? `r emo::ji("tired")` Save your results as `types_xs_list` and `lengths_xs_list`!
+
+---
+
+### Let me introduce you to `functional` `r emo::ji("sunglasses")`
+
+```{r}
+vapply(xs_c, typeof, character(1), USE.NAMES = FALSE)
+vapply(xs_c, length, integer(1), USE.NAMES = FALSE)
+```
+
+--
+
+```{r}
+vapply(xs_list, typeof, character(1), USE.NAMES = FALSE)
+vapply(xs_list, length, integer(1), USE.NAMES = FALSE)
+```
+
+--
+
+Ok, it surely looks simpler but still... `r emo::ji("roll_eyes")`
+
+--
+
+```{r}
+library(purrr)
+map_chr(xs_list, typeof)
+map_int(xs_list, length)
+```
+
+--
+
+So much simpler and better, isn't it? `r emo::ji("party_popper")`
+
+---
+class: inverse, middle
+
+# `list` resembles `JSON` very much!
+
+Have a look at following comparison using subset of `billionaires` data `r emo::ji("money_mouth_face")`
+
+---
+
+.pull-left[
+**Raw JSON file**
+.scrollable-slide[
+```{bash}
+cd data-raw
+cat billionaires_small.json
+```
+]
+]
+
+--
+
+.pull-right[
+**When imported to R**
+.scrollable-slide[
+```{r}
+str(billionaires_small, max.level = 3)
+```
+]
+]
+
+---
+class: inverse, middle
+
+# How to extract the element(s) of a `list`?
+
+---
+
+### From a billionaire, extract info `r emo::ji("dollar")`
+
+.pull-left[
+.scrollable-slide[
+```{r}
+library(purrr)
+pluck(billionaires_small, 1) # you can also use billionaires_small[[1]]
+```
+]
+]
+
+--
+
+.pull-right[
+```{r}
+pluck(billionaires_small, 1, "name") # you can also use billionaires_small[[1]][["name"]]
+
+pluck(billionaires_small, 1, "rank")
+
+pluck(billionaires_small, 1, "wealth", "worth in billions")
+```
+]
+
+---
+
+### From some billionaires, extract info `r emo::ji("dollar")`
+
+.pull-left[
+```{r}
+map(billionaires_small, pluck, "name")
+
+map(billionaires_small, pluck, "wealth", "worth in billions")
+```
+]
+
+--
+
+.pull-right[
+```{r}
+(billionaire_names <- map_chr(billionaires_small, "name"))
+(billionaire_ranks <- map_int(billionaires_small, "rank"))
+(billionaire_worth <- map_dbl(billionaires_small, list("wealth", "worth in billions")))
+```
+
+## Awesome, `map()` provides a shortcut! Bye `pluck()`~ `r emo::ji("waving_hand")`
+
+]
+
+---
+
+class: inverse, middle
+
+# Yeay, we can extract some infos `r emo::ji("muscle")`
+
+--
+
+## But, now they are scattered `r emo::ji("unamused")`
+
+---
+
+### Of course you can combine them later using `data.frame()` or `tibble()`, but... `r emo::ji("tired")`
+
+--
+
+.pull-left[
+```{r}
+data.frame(
+  name = billionaire_names,
+  rank = billionaire_ranks,
+  worth_in_billions = billionaire_worth,
+  stringsAsFactors = FALSE
+)
+```
+]
+
+--
+
+.pull-right[
+```{r}
+library(tibble)
+tibble(
+  name = billionaire_names,
+  rank = billionaire_ranks,
+  worth_in_billions = billionaire_worth
+)
+```
+]
+
+---
+
+### Why don't we contain the `list` in `dataframe`/`tibble` in the first place?
+
+--
+
+.pull-left[
+Let's embrace `list column` `r emo::ji("drum")`
+```{r}
+library(tibble)
+billionaires_small_df <- 
+  billionaires_small %>% 
+  enframe()
+billionaires_small_df
+```
+]
+
+--
+
+.pull-right[
+Now we can make use of `dplyr`, ain't it cool? `r emo::ji("hand_over_mouth")`
+```{r}
+library(dplyr)
+billionaires_small_df %>% 
+  mutate(
+    name = map_chr(value, "name"),
+    rank = map_int(value, "rank"),
+    worth_in_billions = map_dbl(
+      value, 
+      list("wealth", "worth in billions"))
+  ) %>% 
+  select(-value)
+```
+]
+
+---
+class: inverse, middle
+
+# Let's practice! `r emo::ji("star_struck")`
+
++ *Open your RStudio and create a new R Markdown*
++ *Go to [github.com/aswansyahputra/mytalk](https://github.com/aswansyahputra/mytalk)*
++ *Navigate to `2019-08-19_data-rectangling-in-r`*
++ *Click on `hands-on.Rmd`, copy-paste to your previously created R Markdown*

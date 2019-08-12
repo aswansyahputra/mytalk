@@ -1,0 +1,153 @@
+---
+title: "Practice on data rectangling"
+author: "Muhammad Aswan Syahputra"
+date: "8/5/2019"
+output:
+  html_document:
+    df_print: paged
+    theme: flatly
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  dpi = 300,
+  fig.align = "center",
+  out.width = "80%",
+  cache = FALSE
+)
+```
+
+```{bash scrape-tirto, eval = FALSE}
+cd data-raw
+instagram-scraper tirtoid -m 100 --comments --media-types none
+```
+
+```{r load-packages}
+library(jsonlite)
+library(listviewer)
+library(tidyverse)
+```
+
+```{r inspect-list}
+tirto_raw <- fromJSON("data-raw/tirtoid/tirtoid.json")
+jsonedit(tirto_raw)
+```
+
+```{r transform-list}
+tirto_tbl <-
+  tirto_raw %>% 
+  pluck(1) %>% 
+  jsonlite::flatten() %>%
+  transpose() %>%
+  enframe(name = "id", value = "post")
+tirto_tbl
+```
+
+```{r use-map}
+tirto_tbl %>%
+  mutate(
+    post_time = map(post, "taken_at_timestamp"),
+    is_video = map(post, "is_video"),
+    caption = map(post, list(
+      "edge_media_to_caption.edges", "node", "text"
+    )),
+    tags = map(post, "tags"),
+    video_view = map(post, "video_view_count"),
+    media_like = map(post, "edge_media_preview_like.count"),
+    comments_username = map(post, list("comments.data", "owner", "username")),
+    comments_time = map(post, list("comments.data", "created_at")),
+    comments_text = map(post, list("comments.data", "text"))
+  )
+```
+
+```{r use-map-variant}
+tirto_tbl %>%
+  mutate(
+    post_time = map_int(post, "taken_at_timestamp"),
+    is_video = map_lgl(post, "is_video"),
+    caption = map_chr(post, list(
+      "edge_media_to_caption.edges", "node", "text"
+    )),
+    tags = map(post, "tags"),
+    video_view = map_int(post, "video_view_count"),
+    media_like = map_int(post, "edge_media_preview_like.count"),
+    comments_username = map(post, list("comments.data", "owner", "username")),
+    comments_time = map(post, list("comments.data", "created_at")),
+    comments_text = map(post, list("comments.data", "text"))
+  )
+```
+
+```{r define-smart-extract}
+#' Smart extractor
+#'
+#' Extract and possibly flatten the elements of a list automatically.
+#' @param .x A list or atomic vectors
+#' @param what An elemet of list to be extracted
+#' @return A list or possibly an atomic vector
+#' @importFrom purrr map
+#' @export
+smart_extract <- function(.x, ...) {
+  dots <- list(...)
+  res <- map(.x, dots, .default = NA)
+  if (all(vapply(res, length, integer(1)) == 1)) {
+    res <- unlist(res)
+  }
+  return(res)
+}
+```
+
+```{r use-smart-extract}
+tirto_tbl %>% 
+  mutate(
+    post_time = smart_extract(post, "taken_at_timestamp"),
+    is_video = smart_extract(post, "is_video"),
+    caption = smart_extract(post, "edge_media_to_caption.edges", "node", "text"),
+    tags = smart_extract(post, "tags"),
+    video_view = smart_extract(post, "video_view_count"),
+    media_like = smart_extract(post, "edge_media_preview_like.count"),
+    comments_username = smart_extract(post, "comments.data", "owner", "username"),
+    comments_time = smart_extract(post, "comments.data", "created_at"),
+    comments_text = smart_extract(post, "comments.data", "text")
+  )
+```
+
+```{r extract-posts}
+tirto_posts <-
+  tirto_tbl %>% 
+ mutate(
+    post_time = smart_extract(post, "taken_at_timestamp"),
+    is_video = smart_extract(post, "is_video"),
+    caption = smart_extract(post, 
+      "edge_media_to_caption.edges", "node", "text"
+    ),
+    tags = smart_extract(post, "tags"),
+    video_view = smart_extract(post, "video_view_count"),
+    media_like = smart_extract(post, "edge_media_preview_like.count"),
+    comments_username = smart_extract(post, "comments.data", "owner", "username"),
+    comments_time = smart_extract(post, "comments.data", "created_at"),
+    comments_text = smart_extract(post, "comments.data", "text")
+  ) %>% 
+  mutate(
+    post_time = as.POSIXct(post_time, origin = "1970-01-01"), # straighforward processing
+    caption = caption %>% str_remove_all("\\n") %>% str_trim(), # lengthly processing
+    n_tags = map_int(tags, length), # map using one function with no arguments
+    tags = map_chr(tags, ~ paste(.x, collapse = ", ")) # map using lamda function
+  ) %>% 
+  select(id, post_time, is_video, caption, tags, n_tags, everything(), -post)
+tirto_posts
+```
+
+```{r extract-comments}
+tirto_comments <- 
+  tirto_posts %>% 
+  unnest() %>% 
+  mutate_at(vars(ends_with("time")), ~as.POSIXct(.x, origin  = "1970-01-01")) %>% 
+  mutate_if(is.character, ~ .x %>% str_remove_all("\\n") %>% str_trim())
+tirto_comments
+```
+

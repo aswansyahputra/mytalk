@@ -1,0 +1,104 @@
+[
+  {
+    "wealth": {
+      "worth in billions": [3.6],
+      "how": {
+        "category": ["Traded Sectors"],
+        "from emerging": [true],
+        "industry": ["Consumer"],
+        "was political": [false],
+        "inherited": [true],
+        "was founder": [true]
+      },
+      "type": ["founder non-finance"]
+    },
+    "company": {
+      "sector": ["agricultural products"],
+      "founded": [1929],
+      "type": ["new"],
+      "name": ["J.R. Simplot Company"],
+      "relationship": ["founder"]
+    },
+    "rank": [115],
+    "location": {
+      "gdp": [10600000000000],
+      "region": ["North America"],
+      "citizenship": ["United States"],
+      "country code": ["USA"]
+    },
+    "year": [2001],
+    "demographics": {
+      "gender": ["male"],
+      "age": [92]
+    },
+    "name": ["John Simplot"]
+  },
+  {
+    "wealth": {
+      "worth in billions": [2.5],
+      "how": {
+        "category": ["Financial"],
+        "from emerging": [true],
+        "industry": ["Money Management"],
+        "was political": [false],
+        "inherited": [true],
+        "was founder": [true]
+      },
+      "type": ["inherited"]
+    },
+    "company": {
+      "sector": ["banking"],
+      "founded": [1945],
+      "type": ["new"],
+      "name": ["Kasikornbank"],
+      "relationship": ["relation"]
+    },
+    "rank": [143],
+    "location": {
+      "gdp": [182000000000],
+      "region": ["East Asia"],
+      "citizenship": ["Thailand"],
+      "country code": ["THA"]
+    },
+    "year": [1996],
+    "demographics": {
+      "gender": ["male"],
+      "age": [-1]
+    },
+    "name": ["Banyong Lamsam"]
+  },
+  {
+    "wealth": {
+      "worth in billions": [1.8],
+      "how": {
+        "category": ["Non-Traded Sectors"],
+        "from emerging": [true],
+        "industry": ["Retail, Restaurant"],
+        "was political": [false],
+        "inherited": [true],
+        "was founder": [true]
+      },
+      "type": ["founder non-finance"]
+    },
+    "company": {
+      "sector": ["uniforms"],
+      "founded": [1968],
+      "type": ["new"],
+      "name": ["Cintas Corporation"],
+      "relationship": ["founder"]
+    },
+    "rank": [272],
+    "location": {
+      "gdp": [10600000000000],
+      "region": ["North America"],
+      "citizenship": ["United States"],
+      "country code": ["USA"]
+    },
+    "year": [2001],
+    "demographics": {
+      "gender": ["male"],
+      "age": [66]
+    },
+    "name": ["Richard Farmer"]
+  }
+]

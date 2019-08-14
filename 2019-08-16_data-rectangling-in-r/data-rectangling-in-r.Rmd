@@ -255,7 +255,9 @@ class: inverse, middle
 
 # `list` resembles `JSON` very much!
 
-Have a look at following comparison using subset of `billionaires` data `r emo::ji("money_mouth_face")`
+--
+
+## Have a look at following comparison using subset of `billionaires` data `r emo::ji("money_mouth_face")`
 
 ---
 
@@ -382,7 +384,7 @@ tibble(
 --
 
 .pull-left[
-Let's embrace `list column` `r emo::ji("drum")`
+Let's embrace `list-column` `r emo::ji("drum")`
 ```{r}
 library(tibble)
 billionaires_small_df <- 
@@ -415,7 +417,20 @@ class: inverse, middle
 
 # Let's practice! `r emo::ji("star_struck")`
 
-+ *Open your RStudio and create a new R Markdown*
-+ *Go to [github.com/aswansyahputra/mytalk](https://github.com/aswansyahputra/mytalk)*
-+ *Navigate to `2019-08-19_data-rectangling-in-r`*
-+ *Click on `hands-on.Rmd`, copy-paste to your previously created R Markdown*
++ *Download zipped directory at [s.id/data_rectangling](https://s.id/data_rectangling)*
++ *Extract the zip files into your computer*
++ *Open your RStudio and click `File - New Project - Existing Directory. Browse into the previously extracted directory and hit `Create Project`*
++ *Please open `hands-on.Rmd` and read the instruction thoroughly*
+
+---
+class: left, middle
+background-image: url("assets/r-indonesia.svg")
+background-size: 500px
+background-position: 12.5% 50%
+
+.pull-right[
+# Thank you!
+### `r icon::ii("paper-airplane")` [t.me/GNURIndonesia](https://t.me/GNURIndonesia)
+### `r icon::ii("android-globe")` [r-indonesia.id](https://r-indonesia.id)
+### `r icon::ii("email")` [info@r-indonesia.id](mailto:info@r-indonesia.id)
+]

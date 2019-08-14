@@ -1,5 +1,5 @@
 ---
-title: "Practice on data rectangling"
+title: "Data rectangling: practice"
 author: "Muhammad Aswan Syahputra"
 output:
   html_document:
@@ -7,7 +7,7 @@ output:
     toc_float: true
     number_section: true
     df_print: paged
-    theme: cerulean
+    theme: flatly
     highlight: pygments
 ---
 
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 ## Mengambil data Instagram
 Dalam studi kasus ini kita akan menggunakan data yang berasal dari akun instagram [Tirto](https://instagram.com/tirtoid). Kita akan melakukan *scrapping* dengan menggunakan aplikasi instagram-scrapper yang dapat diunduh dari [github.com/rarcega/instagram-scraper](https://github.com/rarcega/instagram-scraper).
 
-Berikut ini adalah baris kode yang digunakan untuk mengambil data dari 100 unggahan terakhir akun instagram [Tirto](https://instagram.com/tirtoid). Data tersebut kita simpan dalam sub-direktori `data-raw`. Data tersebut sudah disediakan dalam studi kasus ini sehingga Anda tidak perlu menjalankan baris kode di bawah ini.
+Berikut ini adalah baris kode yang digunakan untuk mengambil data dari 100 unggahan terakhir akun instagram [Tirto](https://instagram.com/tirtoid). Dalam praktek ini data sudah disediakan di dalam sub-direktori `data-raw` sehingga Anda tidak perlu menjalankan baris kode untuk melakukan *scrapping* akun instagram Tirto.
 
 ```{bash scrape-tirto, eval = FALSE}
 cd data-raw
@@ -36,7 +36,7 @@ instagram-scraper tirtoid -m 100 --comments --media-types none
 
 ## Mengaktifkan paket
 
-Beberapa paket yang akan digunakan dalam studi kasus ini diantaranya adalah `jsonlite`, `listviewer`, dan `tidyverse`. Silakan pasang (jika belum) dan aktifkan tiga paket tersebut terlebih dahulu.
+Beberapa paket yang akan digunakan dalam studi kasus ini diantaranya adalah `jsonlite`, `listviewer`, dan `tidyverse`. Silakan pasang (jika belum) dan aktifkan tiga paket tersebut terlebih dahulu. Isilang bagian '___' dengan jawaban yang tepat!
 
 ```{r load-packages}
 library(jsonlite)

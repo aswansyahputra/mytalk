@@ -179,7 +179,8 @@ tirto_comments
 Meskipun pada dasarnya beberapa kolom telah dibenahi, namun dalam contoh berikut kita akan kembali melakukan perbaikan jenis data pada beberapa kolom dengan menggunakan varian fungsi `mutate()`, yaitu `mutate_at()` dan `mutate_if()`. Perhatikan baris kode berikut dan sebutkan kesamaan antara `mutate_at()` dan `mutate_if()`!
 
 ```{r clean-up}
-tirto_comments %>%
+tirto_comments <- 
+  tirto_comments %>%
   mutate_at(vars(ends_with("time")), ~ as.POSIXct(.x, origin = "1970-01-01")) %>%
   mutate_if(is.character, ~ .x %>%
     str_remove_all("\\n") %>%

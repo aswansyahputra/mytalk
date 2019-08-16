@@ -79,7 +79,7 @@ background-position: 87.5% 50%
 .pull-left[
 ## About me
 + Sensory scientist @ [Sensolution.ID](https://sensolution.id)
-+ Intructor @ [R Academy Telkom University](https://dbe.telkomuniversity.ac.id/r-academy/)
++ Instructor @ [R Academy Telkom University](https://dbe.telkomuniversity.ac.id/r-academy/)
 + Initiator of [Komunitas R Indonesia](https://t.me/GNURIndonesia) (est. 13 August 2016)
 + `r icon::ii("cube")` : `sensehubr`, `nusandata`,
 `bandungjuara`, `prakiraan`, etc
@@ -97,8 +97,8 @@ class: inverse, middle
 # Know your neighbours! `r emo::ji("handshake")`
 
 + *Who are you?*
-+ *What you do with data?*
-+ *How you describe your experience with R?*
++ *What do you do with data?*
++ *How do you describe your experience with R?*
 
 --
 
@@ -109,6 +109,8 @@ countdown(minutes = 3, seconds = 0)
 ---
 
 ### Let's play with some basics! `r emo::ji("hatching_chick")`
+
+--
 
 .pull-left[
 ```{r}
@@ -417,10 +419,10 @@ class: inverse, middle
 
 # Let's practice! `r emo::ji("star_struck")`
 
-+ *Download zipped directory at [s.id/data_rectangling](https://s.id/data_rectangling)*
-+ *Extract the zip files into your computer*
-+ *Open your RStudio and click `File - New Project - Existing Directory. Browse into the previously extracted directory and hit `Create Project`*
-+ *Please open `hands-on.Rmd` and read the instruction thoroughly*
++ *Open your RStudio, then install `usethis` package*
++ *Once succeed, run `usethis::use_course("aswansyahputra/kpdr_jogja")`*
++ *Follow the instructions and new RStudio session will be automatically opened*
++ *Please open `hands-on.Rmd` and read the instructions thoroughly*
 
 ---
 class: left, middle

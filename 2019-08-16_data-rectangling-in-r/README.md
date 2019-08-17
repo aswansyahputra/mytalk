@@ -1,0 +1,1 @@
+Presentation is available at [https://speakerdeck.com/aswansyahputra/data-rectangling-in-r-a-journey-from-json-to-csv](https://speakerdeck.com/aswansyahputra/data-rectangling-in-r-a-journey-from-json-to-csv).

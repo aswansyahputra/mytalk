@@ -81,14 +81,14 @@ background-position: 87.5% 50%
 + Sensory scientist @ [Sensolution.ID](https://sensolution.id)
 + Instructor @ [R Academy Telkom University](https://dbe.telkomuniversity.ac.id/r-academy/)
 + Initiator of [Komunitas R Indonesia](https://t.me/GNURIndonesia) (est. 13 August 2016)
-+ `r icon::ii("cube")` : `sensehubr`, `nusandata`,
++ `r icon::fa("cube")` : `sensehubr`, `nusandata`,
 `bandungjuara`, `prakiraan`, etc
-+ `r icon::ii("android-desktop")` : `sensehub`, `thermostats`,
++ `r icon::fa("desktop")` : `sensehub`, `thermostats`,
 `aquastats`, `bcrp`, `bandungjuara`, etc
-+ `r icon::ii("paper-airplane")` : aswansyahputra
-+ `r icon::ii("social-twitter")` : aswansyahputra_
-+ `r icon::ii("social-github")` : aswansyahputra
-+ `r icon::ii("social-linkedin")` : aswansyahputra
++ `r icon::fa("telegram")` : aswansyahputra
++ `r icon::fa("twitter")` : aswansyahputra_
++ `r icon::fa("github")` : aswansyahputra
++ `r icon::fa("linkedin")` : aswansyahputra
 ]
 
 ---
@@ -432,7 +432,7 @@ background-position: 12.5% 50%
 
 .pull-right[
 # Thank you!
-### `r icon::ii("paper-airplane")` [t.me/GNURIndonesia](https://t.me/GNURIndonesia)
-### `r icon::ii("android-globe")` [r-indonesia.id](https://r-indonesia.id)
-### `r icon::ii("email")` [info@r-indonesia.id](mailto:info@r-indonesia.id)
+### `r icon::fa("telegram")` [t.me/GNURIndonesia](https://t.me/GNURIndonesia)
+### `r icon::fa("globe")` [r-indonesia.id](https://r-indonesia.id)
+### `r icon::fa("envelope")` [info@r-indonesia.id](mailto:info@r-indonesia.id)
 ]
